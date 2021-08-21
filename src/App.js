@@ -1,16 +1,47 @@
 import React from 'react'
+import './App.css'
+import Loader from "react-loader-spinner"
 
-const arr = [1,2,3,4,5,6];
+import { getCharacter } from './api/api';
 
-export function App() {
-  return (
-    <div className="App">
-      <h1>Me app</h1>
-      {arr.map((el, i) => (
-        <p key={arr[i + 1]}>{el}</p>
-        ))}
+console.log(getCharacter);
 
-      <p>asd</p>
-    </div>
-  );
+export class App extends React.Component {
+  state = {
+    data: [],
+  }
+
+  async componentDidMount() {
+    this.setState({ data: await getCharacter })
+  }
+
+
+  render() {
+    const {data} = this.state;
+
+    if (!data) {
+      return (
+        <Loader
+          type="Puff"
+          color="#00BFFF"
+          height={100}
+          width={100}
+          timeout={3000}
+        />
+      );
+    }
+
+    return (
+      <div className="App">
+        <h1>Me app</h1>
+        <ul>
+        {data.map(el => (
+            <li key={el.id} style={{"outline": '1px black solid'}}>
+              {el.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
 }
